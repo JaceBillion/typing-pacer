@@ -111,8 +111,7 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
     setIsFinished(true);
     const endTime = Date.now();
     const timeMinutes = isTimeUp && duration ? duration / 60 : (endTime - (startTime || endTime)) / 60000;
-    
-    const wpm = Math.round((finalInput.length / 5) / (timeMinutes || 1/60));
+    const safeTimeMinutes = timeMinutes > 0 ? timeMinutes : 1/60;
     
     let correctChars = 0;
     for (let i = 0; i < finalInput.length; i++) {
@@ -120,8 +119,17 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
     }
     const accuracy = finalInput.length > 0 ? Math.round((correctChars / finalInput.length) * 100) : 0;
     
+    // Calculate Net WPM (Gross WPM - Uncorrected Errors per minute)
+    const grossWpm = (finalInput.length / 5) / safeTimeMinutes;
+    const uncorrectedErrors = finalInput.length - correctChars;
+    let netWpm = Math.round(grossWpm - (uncorrectedErrors / safeTimeMinutes));
+    if (netWpm < 0) netWpm = 0;
+    
+    const wpm = netWpm;
+    const isSuccess = wpm >= targetWpm && accuracy >= 85;
+    
     setStats({ wpm, accuracy });
-    if (wpm >= targetWpm) {
+    if (isSuccess) {
       triggerConfetti();
     }
     if (onComplete) {
@@ -386,46 +394,50 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
 
       {isFinished && stats && (
         <motion.div 
-          initial={{ opacity: 0, x: stats.wpm >= targetWpm ? 0 : [-10, 10, -10, 10, 0], y: 10 }}
+          initial={{ opacity: 0, x: (stats.wpm >= targetWpm && stats.accuracy >= 85) ? 0 : [-10, 10, -10, 10, 0], y: 10 }}
           animate={{ opacity: 1, x: 0, y: 0 }}
           transition={{ duration: 0.4 }}
           className={`mt-12 text-center border-t pt-8 transition-colors duration-500 ${
-            stats.wpm >= targetWpm ? 'border-lavender-accent/30' : 'border-coral-error/20'
+            (stats.wpm >= targetWpm && stats.accuracy >= 85) ? 'border-lavender-accent/30' : 'border-coral-error/20'
           }`}
         >
           <h3 className={`text-2xl font-bold mb-6 ${
-            stats.wpm >= targetWpm ? 'text-lavender-accent' : 'text-frosted-text/70'
+            (stats.wpm >= targetWpm && stats.accuracy >= 85) ? 'text-lavender-accent' : 'text-frosted-text/70'
           }`}>
             Session Complete
           </h3>
           
           <div className="flex justify-center gap-6 mb-6">
             <div className={`bg-indigo-bg px-8 py-4 rounded-xl border shadow-inner transition-all duration-500 ${
-              stats.wpm >= targetWpm 
+              (stats.wpm >= targetWpm && stats.accuracy >= 85) 
                 ? 'border-lavender-accent/30 shadow-[0_0_20px_rgba(187,154,247,0.15)]' 
                 : 'border-coral-error/20 shadow-[0_0_15px_rgba(247,118,142,0.05)]'
             }`}>
               <div className="text-frosted-text/50 text-sm mb-1 uppercase tracking-wider">Speed</div>
               <div className={`text-4xl font-bold ${
-                stats.wpm >= targetWpm ? 'text-lavender-accent' : 'text-coral-error/90'
+                (stats.wpm >= targetWpm && stats.accuracy >= 85) ? 'text-lavender-accent' : 'text-coral-error/90'
               }`}>{stats.wpm} <span className="text-lg text-frosted-text/50 font-normal">WPM</span></div>
             </div>
             <div className={`bg-indigo-bg px-8 py-4 rounded-xl border shadow-inner transition-all duration-500 ${
-              stats.wpm >= targetWpm 
+              (stats.wpm >= targetWpm && stats.accuracy >= 85) 
                 ? 'border-lavender-accent/30 shadow-[0_0_20px_rgba(187,154,247,0.15)]' 
                 : 'border-coral-error/20 shadow-[0_0_15px_rgba(247,118,142,0.05)]'
             }`}>
               <div className="text-frosted-text/50 text-sm mb-1 uppercase tracking-wider">Accuracy</div>
-              <div className="text-4xl font-bold text-frosted-text">{stats.accuracy}<span className="text-lg text-frosted-text/50 font-normal">%</span></div>
+              <div className={`text-4xl font-bold ${
+                stats.accuracy >= 85 ? 'text-frosted-text' : 'text-coral-error/90'
+              }`}>{stats.accuracy}<span className="text-lg text-frosted-text/50 font-normal">%</span></div>
             </div>
           </div>
           
           <p className="text-frosted-text/70 text-lg italic">
-            {stats.wpm >= targetWpm 
+            {(stats.wpm >= targetWpm && stats.accuracy >= 85) 
               ? "Flow state achieved. Perfect rhythm." 
-              : targetWpm - stats.wpm <= 10
-                ? "Almost there. Breathe and try again."
-                : "Focus on accuracy first. Speed will follow. Reset and try again."}
+              : stats.accuracy < 85
+                ? "Focus on accuracy first. Speed will follow. Reset and try again."
+                : targetWpm - stats.wpm <= 10
+                  ? "Almost there. Breathe and try again."
+                  : "Keep practicing to build speed. Reset and try again."}
           </p>
         </motion.div>
       )}
