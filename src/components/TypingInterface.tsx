@@ -22,7 +22,16 @@ const EASY_SENTENCES = [
   "practice makes perfect when you focus on the details",
   "time flies when you are having fun",
   "better late than never but never late is better",
-  "a picture is worth a thousand words"
+  "a picture is worth a thousand words",
+  "it was the best of times it was the worst of times",
+  "all the worlds a stage and all the men and women merely players",
+  "i am no bird and no net ensnares me",
+  "there is nothing either good or bad but thinking makes it so",
+  "it is a truth universally acknowledged that a single man must be in want of a wife",
+  "we are all in the gutter but some of us are looking at the stars",
+  "the only way to get rid of a temptation is to yield to it",
+  "beware for i am fearless and therefore powerful",
+  "whatever our souls are made of his and mine are the same"
 ];
 
 const MEDIUM_SENTENCES = [
@@ -45,7 +54,16 @@ const MEDIUM_SENTENCES = [
   "In the middle of difficulty lies opportunity.",
   "What you get by achieving your goals is not as important as what you become.",
   "The best way to predict the future is to create it.",
-  "You are never too old to set another goal or to dream a new dream."
+  "You are never too old to set another goal or to dream a new dream.",
+  "It was the best of times, it was the worst of times, it was the age of wisdom.",
+  "I am no bird; and no net ensnares me: I am a free human being with an independent will.",
+  "There is nothing either good or bad, but thinking makes it so.",
+  "Beware; for I am fearless, and therefore powerful.",
+  "Whatever our souls are made of, his and mine are the same.",
+  "We are all in the gutter, but some of us are looking at the stars.",
+  "The only way to get rid of a temptation is to yield to it.",
+  "I would always rather be happy than dignified.",
+  "To love or have loved, that is enough. Ask nothing further."
 ];
 
 const HARD_SENTENCES = [
@@ -68,7 +86,15 @@ const HARD_SENTENCES = [
   "document.querySelectorAll('.btn').forEach(btn => btn.addEventListener('click', handler));",
   "git rebase -i HEAD~3 && git push origin main --force",
   "chmod 755 script.sh && ./script.sh --env=production",
-  "{\"name\": \"typing-pacer\", \"version\": \"1.0.0\", \"dependencies\": { \"react\": \"^18.2.0\" }}"
+  "{\"name\": \"typing-pacer\", \"version\": \"1.0.0\", \"dependencies\": { \"react\": \"^18.2.0\" }}",
+  "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer...",
+  "It is a far, far better thing that I do, than I have ever done; it is a far, far better rest...",
+  "O Romeo, Romeo! wherefore art thou Romeo? Deny thy father and refuse thy name;",
+  "Water, water, every where, / And all the boards did shrink; / Nor any drop to drink.",
+  "Once upon a midnight dreary, while I pondered, weak and weary, Over many a quaint and curious volume...",
+  "\"I have love in me the likes of which you can scarcely imagine and rage the likes of which you would not believe.\" — Mary Shelley",
+  "\"It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.\" — Jane Austen",
+  "\"All human wisdom is contained in these two words - Wait and Hope.\" — Alexandre Dumas"
 ];
 
 function generateText(difficulty: 'Easy' | 'Medium' | 'Hard', minLength: number = 150) {
@@ -358,17 +384,37 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
         />
 
         {/* The Text */}
-        <div ref={textContainerRef} className="relative z-0 text-frosted-text/50 select-none">
-          {text.split('').map((char, i) => {
-            let colorClass = '';
-            if (i < input.length) {
-              colorClass = input[i] === char ? 'text-lavender-accent' : 'text-coral-error bg-coral-error/20 rounded-sm';
-            }
+        <div ref={textContainerRef} className="relative z-0 text-frosted-text/50 select-none flex flex-wrap">
+          {text.split(' ').map((word, wordIdx, wordsArray) => {
+            const startIndex = wordsArray.slice(0, wordIdx).join(' ').length + (wordIdx > 0 ? 1 : 0);
             
             return (
-              <span key={i} className={`char-span inline-block ${colorClass}`}>
-                {char === ' ' ? '\u00A0' : char}
-              </span>
+              <div key={wordIdx} className="flex whitespace-pre">
+                {word.split('').map((char, charIdx) => {
+                  const i = startIndex + charIdx;
+                  let colorClass = '';
+                  if (i < input.length) {
+                    colorClass = input[i] === char ? 'text-lavender-accent' : 'text-coral-error bg-coral-error/20 rounded-sm';
+                  }
+                  return (
+                    <span key={i} className={`char-span ${colorClass}`}>
+                      {char}
+                    </span>
+                  );
+                })}
+                {wordIdx < wordsArray.length - 1 && (() => {
+                  const i = startIndex + word.length;
+                  let colorClass = '';
+                  if (i < input.length) {
+                    colorClass = input[i] === ' ' ? 'text-lavender-accent' : 'text-coral-error bg-coral-error/20 rounded-sm';
+                  }
+                  return (
+                    <span key={i} className={`char-span ${colorClass}`}>
+                      {' '}
+                    </span>
+                  );
+                })()}
+              </div>
             );
           })}
         </div>
