@@ -77,9 +77,9 @@ export default function Lessons() {
   const [isTyping, setIsTyping] = useState(false);
   const [currentLessonText, setCurrentLessonText] = useState('');
 
-  const handleComplete = (wpm: number) => {
+  const handleComplete = (wpm: number, accuracy: number) => {
     const activeLesson = LESSONS_DATA.find(l => l.id === activeLessonId);
-    if (activeLesson && wpm >= activeLesson.targetWpm) {
+    if (activeLesson && wpm >= activeLesson.targetWpm && accuracy >= 85) {
       const newProgress = { ...progress, [activeLesson.id]: 'completed' };
       if (activeLesson.id < 4 && newProgress[activeLesson.id + 1] === 'locked') {
         newProgress[activeLesson.id + 1] = 'unlocked';
@@ -116,7 +116,7 @@ export default function Lessons() {
           <TypingInterface 
             targetWpm={activeLesson.targetWpm} 
             customText={currentLessonText} 
-            onComplete={(wpm) => handleComplete(wpm)}
+            onComplete={(wpm, accuracy) => handleComplete(wpm, accuracy)}
           />
 
           {/* AdSense Placeholder - Horizontal Leaderboard */}
