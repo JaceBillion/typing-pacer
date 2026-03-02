@@ -1,13 +1,15 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Keyboard, Activity, BookOpen, Sparkles } from 'lucide-react';
+import { Keyboard, Activity, BookOpen, Sparkles, Gamepad2 } from 'lucide-react';
 import clsx from 'clsx';
+import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Navbar() {
   const navLinks = [
     { to: '/', label: 'The Pacer', icon: Keyboard },
     { to: '/lessons', label: 'Lessons', icon: BookOpen },
     { to: '/progress', label: 'Progress', icon: Activity },
+    { to: '/games', label: 'Games', icon: Gamepad2 },
     { to: '/lab', label: 'The Lab', icon: Sparkles },
   ];
 
@@ -44,8 +46,9 @@ export default function Navbar() {
           </div>
         </div>
         
-        {/* Right: Sparks */}
-        <div className="flex-1 flex justify-end">
+        {/* Right: Sparks & Theme */}
+        <div className="flex-1 flex justify-end items-center gap-4">
+          <ThemeSwitcher />
           <div className="flex items-center gap-2 text-sm font-medium text-lavender-accent bg-lavender-accent/10 px-3 py-1.5 rounded-full border border-lavender-accent/20 whitespace-nowrap">
             <Sparkles className="w-4 h-4 shrink-0" />
             <span className="hidden sm:inline">1,240 Sparks</span>

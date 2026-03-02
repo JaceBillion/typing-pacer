@@ -118,9 +118,10 @@ interface TypingInterfaceProps {
   customText?: string;
   duration?: number;
   onComplete?: (wpm: number, accuracy: number) => void;
+  onReset?: () => void;
 }
 
-export default function TypingInterface({ targetWpm, difficulty = 'Easy', customText, duration, onComplete }: TypingInterfaceProps) {
+export default function TypingInterface({ targetWpm, difficulty = 'Easy', customText, duration, onComplete, onReset }: TypingInterfaceProps) {
   const [text, setText] = useState(() => customText || generateText(difficulty, duration ? targetWpm * 5 * (duration / 60) * 2.0 : 150));
   const [input, setInput] = useState('');
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -302,6 +303,10 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
   };
 
   const reset = () => {
+    if (onReset) {
+      onReset();
+    }
+    
     const minLen = duration ? targetWpm * 5 * (duration / 60) * 2.0 : 150;
     setText(customText || generateText(difficulty, minLen));
     setInput('');

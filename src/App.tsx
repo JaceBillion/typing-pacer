@@ -7,6 +7,7 @@ import Lessons from './pages/Lessons';
 import Progress from './pages/Progress';
 import Lab from './pages/Lab';
 import About from './pages/About';
+import Games from './pages/Games';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/lab" element={<Lab />} />
+            <Route path="/games" element={<Games />} />
             <Route path="/about" element={<About />} />
           </Routes>
         </main>

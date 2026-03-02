@@ -4,16 +4,34 @@ import { Activity, Flame, Target, ArrowLeft } from 'lucide-react';
 import TypingInterface from '../components/TypingInterface';
 import AdPlaceholder from '../components/AdPlaceholder';
 
-const DRILL_TEXTS = [
+const ZXC_DRILLS = [
   "zebra xylophone cat crazy exact zero box cozy extra lazy mix catch buzz next zip",
   "crazy cats catch cozy zebras exactly next to the xylophone box",
   "zero extra boxes of pizza exist next to the crazy lazy cat",
   "buzzing bees mix with lazy zebras catching exact cozy naps",
-  "exact xylophones buzz next to crazy cats catching lazy zebras"
+  "exact xylophones buzz next to crazy cats catching lazy zebras",
+  "zapping xylophones catch extra crazy zebras mixing cozy boxes",
+  "lazy cats buzz exactly next to zero extra pizza boxes",
+  "cozy zebras mix crazy xylophones exactly next to the lazy cat",
+  "extra buzzing bees catch zero lazy zebras next to the box",
+  "crazy xylophones zap exactly next to cozy cats mixing pizza"
+];
+
+const PUNCTUATION_DRILLS = [
+  "Is it greater than > or less than < ? I don't know!",
+  "What is the meaning of life? Is it 42? Or > 42?",
+  "Please go to /home/user/docs. Is that < correct >?",
+  "Why? How? When? Where? Who? /what/ is happening?",
+  "<html> <body> <h1> Hello World! </h1> </body> </html>",
+  "if (x > y) { return true; } else if (x < y) { return false; }",
+  "Did you read the article? It was <br> brilliant! Right?",
+  "The path is /usr/local/bin/ ... wait, is it?",
+  "Are we there yet? < Maybe > we are closer than we think.",
+  "Type this: / ? < > / ? < > / ? < > / ? < >"
 ];
 
 export default function Progress() {
-  const [activeDrill, setActiveDrill] = useState(false);
+  const [activeDrill, setActiveDrill] = useState<string | null>(null);
   const [currentDrillText, setCurrentDrillText] = useState('');
 
   const stats = [
@@ -23,6 +41,8 @@ export default function Progress() {
   ];
 
   if (activeDrill) {
+    const drillBank = activeDrill === 'ZXC' ? ZXC_DRILLS : PUNCTUATION_DRILLS;
+    
     return (
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -32,20 +52,27 @@ export default function Progress() {
       >
         <div className="w-full max-w-4xl mb-8 flex justify-between items-center">
           <button 
-            onClick={() => setActiveDrill(false)}
+            onClick={() => setActiveDrill(null)}
             className="flex items-center gap-2 text-frosted-text/70 hover:text-lavender-accent transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Progress
           </button>
           <div className="text-xl font-bold text-frosted-text">
-            Muscle Memory Drill: <span className="text-coral-error">Z, X, C</span>
+            Muscle Memory Drill: <span className="text-coral-error">{activeDrill === 'ZXC' ? 'Z, X, C' : '<, >, ?, /'}</span>
           </div>
         </div>
         
         <TypingInterface 
           targetWpm={60} 
           customText={currentDrillText} 
+          onReset={() => {
+            let newText = currentDrillText;
+            while (newText === currentDrillText) {
+              newText = drillBank[Math.floor(Math.random() * drillBank.length)];
+            }
+            setCurrentDrillText(newText);
+          }}
         />
 
         {/* AdSense Placeholder - Horizontal Leaderboard */}
@@ -111,9 +138,9 @@ export default function Progress() {
             ))}
           </div>
           <div className="flex justify-center gap-2 ml-12">
-            {['Z','X','C','V','B','N','M'].map(k => (
+            {['Z','X','C','V','B','N','M','<','>','?'].map(k => (
               <div key={k} className={`w-12 h-12 flex items-center justify-center rounded-lg border transition-all ${
-                ['Z','X','C'].includes(k) ? 'bg-coral-error/30 border-coral-error text-coral-error shadow-[0_0_10px_rgba(247,118,142,0.2)]' :
+                ['Z','X','C', '<', '>', '?'].includes(k) ? 'bg-coral-error/30 border-coral-error text-coral-error shadow-[0_0_10px_rgba(247,118,142,0.2)]' :
                 'bg-indigo-bg border-white/10 text-frosted-text/50'
               }`}>
                 {k}
@@ -122,25 +149,49 @@ export default function Progress() {
           </div>
         </div>
 
-        <div className="mt-12 p-6 bg-coral-error/5 border border-coral-error/20 rounded-xl flex items-start gap-4">
-          <div className="p-3 bg-coral-error/20 rounded-lg text-coral-error">
-            <Activity className="w-6 h-6" />
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-6 bg-coral-error/5 border border-coral-error/20 rounded-xl flex items-start gap-4">
+            <div className="p-3 bg-coral-error/20 rounded-lg text-coral-error shrink-0">
+              <Activity className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-coral-error mb-1">Left Pinky Drill</h4>
+              <p className="text-frosted-text/70 text-sm mb-4">
+                Your left pinky and ring finger (Z, X, C) are showing signs of stress. 
+                Repetition builds effortless muscle memory.
+              </p>
+              <button 
+                onClick={() => {
+                  setActiveDrill('ZXC');
+                  setCurrentDrillText(ZXC_DRILLS[Math.floor(Math.random() * ZXC_DRILLS.length)]);
+                }}
+                className="px-4 py-2 bg-coral-error/20 text-coral-error hover:bg-coral-error hover:text-indigo-bg rounded-lg font-medium transition-colors text-sm"
+              >
+                Start Z, X, C Drill
+              </button>
+            </div>
           </div>
-          <div>
-            <h4 className="text-lg font-bold text-coral-error mb-1">Drill Suggestion</h4>
-            <p className="text-frosted-text/70 text-sm mb-4">
-              Your left pinky and ring finger (Z, X, C) are showing signs of stress. 
-              Repetition builds effortless muscle memory.
-            </p>
-            <button 
-              onClick={() => {
-                setActiveDrill(true);
-                setCurrentDrillText(DRILL_TEXTS[Math.floor(Math.random() * DRILL_TEXTS.length)]);
-              }}
-              className="px-4 py-2 bg-coral-error/20 text-coral-error hover:bg-coral-error hover:text-indigo-bg rounded-lg font-medium transition-colors text-sm"
-            >
-              Start 30s Muscle Memory Drill
-            </button>
+
+          <div className="p-6 bg-coral-error/5 border border-coral-error/20 rounded-xl flex items-start gap-4">
+            <div className="p-3 bg-coral-error/20 rounded-lg text-coral-error shrink-0">
+              <Activity className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-coral-error mb-1">Right Pinky Drill</h4>
+              <p className="text-frosted-text/70 text-sm mb-4">
+                Punctuation marks (&lt;, &gt;, ?, /) are common stumbling blocks for developers. 
+                Train your right pinky to reach them without looking.
+              </p>
+              <button 
+                onClick={() => {
+                  setActiveDrill('PUNCTUATION');
+                  setCurrentDrillText(PUNCTUATION_DRILLS[Math.floor(Math.random() * PUNCTUATION_DRILLS.length)]);
+                }}
+                className="px-4 py-2 bg-coral-error/20 text-coral-error hover:bg-coral-error hover:text-indigo-bg rounded-lg font-medium transition-colors text-sm"
+              >
+                Start &lt;, &gt;, ? Drill
+              </button>
+            </div>
           </div>
         </div>
       </div>
