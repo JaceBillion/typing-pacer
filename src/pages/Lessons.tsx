@@ -254,6 +254,12 @@ export default function Lessons() {
               <p className="text-frosted-text/60 text-sm leading-relaxed">
                 {lesson.desc}
               </p>
+              {status === 'locked' && (
+                <div className="mt-4 pt-4 border-t border-white/5 text-xs text-frosted-text/40 font-medium flex items-center gap-1.5">
+                  <Lock className="w-3 h-3" />
+                  Complete Lesson 0{lesson.id - 1} to unlock
+                </div>
+              )}
             </div>
           );
         })}
