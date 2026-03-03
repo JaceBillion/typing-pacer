@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Gamepad2, CloudRain, Zap, Brain } from 'lucide-react';
 import RaindropGame from '../components/RaindropGame';
+import MemoryMatrixGame from '../components/MemoryMatrixGame';
 
 export default function Games() {
   const [activeGame, setActiveGame] = useState<string | null>(null);
@@ -12,9 +13,22 @@ export default function Games() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="max-w-7xl mx-auto px-6 py-12 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]"
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]"
       >
         <RaindropGame onExit={() => setActiveGame(null)} />
+      </motion.div>
+    );
+  }
+
+  if (activeGame === 'memory') {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]"
+      >
+        <MemoryMatrixGame onExit={() => setActiveGame(null)} />
       </motion.div>
     );
   }
@@ -68,17 +82,20 @@ export default function Games() {
           </div>
         </div>
 
-        {/* Memory Matrix (Coming Soon) */}
-        <div className="bg-slate-ui/50 p-6 rounded-2xl border border-white/5 opacity-60">
-          <div className="p-4 bg-black/20 rounded-xl text-frosted-text/40 w-fit mb-6">
+        {/* Memory Matrix */}
+        <div 
+          onClick={() => setActiveGame('memory')}
+          className="bg-slate-ui p-6 rounded-2xl border border-white/10 hover:border-lavender-accent/50 transition-all duration-300 cursor-pointer group"
+        >
+          <div className="p-4 bg-indigo-bg rounded-xl text-lavender-accent w-fit mb-6 group-hover:scale-110 transition-transform">
             <Brain className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-bold text-frosted-text/50 mb-2">Memory Matrix</h3>
-          <p className="text-frosted-text/40 mb-6">
-            A word flashes on the screen for 2 seconds, then disappears. Type it from memory.
+          <h3 className="text-2xl font-bold text-frosted-text mb-2">Memory Matrix</h3>
+          <p className="text-frosted-text/60 mb-6">
+            A word flashes on the screen for a brief moment, then disappears. Type it from memory to survive.
           </p>
-          <div className="flex items-center gap-2 text-sm font-medium text-frosted-text/30">
-            Coming Soon
+          <div className="flex items-center gap-2 text-sm font-medium text-lavender-accent">
+            Play Game &rarr;
           </div>
         </div>
       </div>
