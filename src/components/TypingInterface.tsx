@@ -355,26 +355,26 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
   }, [pacerIndex, charPositions]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-8 bg-slate-ui rounded-2xl shadow-lg relative overflow-hidden">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-6">
-          <div className="text-lavender-accent font-medium">Target: {targetWpm} WPM</div>
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 bg-slate-ui rounded-2xl shadow-lg relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-6">
+          <div className="text-lavender-accent font-medium text-sm sm:text-base">Target: {targetWpm} WPM</div>
           {duration && (
-            <div className="text-frosted-text/70 font-medium">
+            <div className="text-frosted-text/70 font-medium text-sm sm:text-base">
               Time: <span className="text-lavender-accent">{timeLeft !== null ? timeLeft : duration}s</span>
             </div>
           )}
         </div>
         <button 
           onClick={reset}
-          className="px-4 py-2 rounded-lg bg-indigo-bg text-frosted-text hover:text-lavender-accent transition-colors"
+          className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-indigo-bg text-frosted-text hover:text-lavender-accent transition-colors text-sm sm:text-base w-full sm:w-auto"
         >
           Reset
         </button>
       </div>
 
       <div 
-        className="relative font-mono text-2xl leading-relaxed tracking-wide cursor-text"
+        className="relative font-mono text-lg sm:text-2xl leading-relaxed tracking-wide cursor-text min-h-[150px]"
         onClick={() => inputRef.current?.focus()}
       >
         {/* Hidden input for capturing typing */}
@@ -458,26 +458,26 @@ export default function TypingInterface({ targetWpm, difficulty = 'Easy', custom
             Session Complete
           </h3>
           
-          <div className="flex justify-center gap-6 mb-6">
-            <div className={`bg-indigo-bg px-8 py-4 rounded-xl border shadow-inner transition-all duration-500 ${
+          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-6">
+            <div className={`bg-indigo-bg px-6 sm:px-8 py-4 rounded-xl border shadow-inner transition-all duration-500 w-full sm:w-auto ${
               (stats.wpm >= targetWpm && stats.accuracy >= 85) 
                 ? 'border-lavender-accent/30 shadow-[0_0_20px_rgba(187,154,247,0.15)]' 
                 : 'border-coral-error/20 shadow-[0_0_15px_rgba(247,118,142,0.05)]'
             }`}>
-              <div className="text-frosted-text/50 text-sm mb-1 uppercase tracking-wider">Speed</div>
-              <div className={`text-4xl font-bold ${
+              <div className="text-frosted-text/50 text-xs sm:text-sm mb-1 uppercase tracking-wider">Speed</div>
+              <div className={`text-3xl sm:text-4xl font-bold ${
                 (stats.wpm >= targetWpm && stats.accuracy >= 85) ? 'text-lavender-accent' : 'text-coral-error/90'
-              }`}>{stats.wpm} <span className="text-lg text-frosted-text/50 font-normal">WPM</span></div>
+              }`}>{stats.wpm} <span className="text-base sm:text-lg text-frosted-text/50 font-normal">WPM</span></div>
             </div>
-            <div className={`bg-indigo-bg px-8 py-4 rounded-xl border shadow-inner transition-all duration-500 ${
+            <div className={`bg-indigo-bg px-6 sm:px-8 py-4 rounded-xl border shadow-inner transition-all duration-500 w-full sm:w-auto ${
               (stats.wpm >= targetWpm && stats.accuracy >= 85) 
                 ? 'border-lavender-accent/30 shadow-[0_0_20px_rgba(187,154,247,0.15)]' 
                 : 'border-coral-error/20 shadow-[0_0_15px_rgba(247,118,142,0.05)]'
             }`}>
-              <div className="text-frosted-text/50 text-sm mb-1 uppercase tracking-wider">Accuracy</div>
-              <div className={`text-4xl font-bold ${
+              <div className="text-frosted-text/50 text-xs sm:text-sm mb-1 uppercase tracking-wider">Accuracy</div>
+              <div className={`text-3xl sm:text-4xl font-bold ${
                 stats.accuracy >= 85 ? 'text-frosted-text' : 'text-coral-error/90'
-              }`}>{stats.accuracy}<span className="text-lg text-frosted-text/50 font-normal">%</span></div>
+              }`}>{stats.accuracy}<span className="text-base sm:text-lg text-frosted-text/50 font-normal">%</span></div>
             </div>
           </div>
           

@@ -189,57 +189,41 @@ export default function RaindropGame({ onExit }: { onExit: () => void }) {
     gameStateRef.current = gameState;
   }, [gameState]);
 
-  const inputRef = useRef(input);
-  useEffect(() => {
-    inputRef.current = input;
-  }, [input]);
+  const inputElementRef = useRef<HTMLInputElement>(null);
 
-  // Handle typing
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isPlaying || gameStateRef.current.isGameOver) return;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPlaying || gameStateRef.current.isGameOver) return;
+    
+    const nextInput = e.target.value.toLowerCase().replace(/[^a-z]/g, '');
+    
+    const matchIndex = gameStateRef.current.words.findIndex(w => w.text === nextInput);
+    
+    if (matchIndex !== -1) {
+      const matchedWord = gameStateRef.current.words[matchIndex];
       
-      if (e.key === 'Backspace') {
-        setInput(prev => prev.slice(0, -1));
-        return;
-      }
+      // Trigger Explosion
+      setExplosions(ex => [...ex, { id: matchedWord.id, x: matchedWord.x, y: matchedWord.y }]);
+      setTimeout(() => {
+        setExplosions(ex => ex.filter(e => e.id !== matchedWord.id));
+      }, 1000);
+
+      setScore(s => s + 1);
+      setInput('');
       
-      if (e.key === 'Escape') {
-        setInput('');
-        return;
-      }
+      setGameState(current => ({
+        ...current,
+        words: current.words.filter((_, i) => i !== matchIndex)
+      }));
+    } else {
+      setInput(nextInput);
+    }
+  };
 
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        const char = e.key.toLowerCase();
-        const nextInput = inputRef.current + char;
-        
-        const matchIndex = gameStateRef.current.words.findIndex(w => w.text === nextInput);
-        
-        if (matchIndex !== -1) {
-          const matchedWord = gameStateRef.current.words[matchIndex];
-          
-          // Trigger Explosion
-          setExplosions(ex => [...ex, { id: matchedWord.id, x: matchedWord.x, y: matchedWord.y }]);
-          setTimeout(() => {
-            setExplosions(ex => ex.filter(e => e.id !== matchedWord.id));
-          }, 1000);
-
-          setScore(s => s + 1);
-          setInput('');
-          
-          setGameState(current => ({
-            ...current,
-            words: current.words.filter((_, i) => i !== matchIndex)
-          }));
-        } else {
-          setInput(nextInput);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPlaying]);
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setInput('');
+    }
+  };
 
   const startGame = () => {
     setIsPlaying(true);
@@ -274,7 +258,28 @@ export default function RaindropGame({ onExit }: { onExit: () => void }) {
       </div>
 
       {/* Game Area */}
-      <div className="flex-1 relative overflow-hidden bg-indigo-bg">
+      <div 
+        className="flex-1 relative overflow-hidden bg-indigo-bg cursor-text"
+        onClick={() => {
+          if (isPlaying && !gameState.isGameOver) {
+            inputElementRef.current?.focus();
+          }
+        }}
+      >
+        <input
+          ref={inputElementRef}
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          className="absolute opacity-0 w-1 h-1 z-0"
+          autoFocus
+          disabled={!isPlaying || gameState.isGameOver}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+        />
         {/* Grid Background */}
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
@@ -358,7 +363,14 @@ export default function RaindropGame({ onExit }: { onExit: () => void }) {
       </div>
 
       {/* Input Display */}
-      <div className="h-20 border-t border-white/5 bg-indigo-bg/50 flex items-center justify-center z-10">
+      <div 
+        className="h-20 border-t border-white/5 bg-indigo-bg/50 flex items-center justify-center z-10 cursor-text"
+        onClick={() => {
+          if (isPlaying && !gameState.isGameOver) {
+            inputElementRef.current?.focus();
+          }
+        }}
+      >
         <div className="text-3xl font-mono tracking-widest text-lavender-accent h-10 flex items-center">
           {input || <span className="text-frosted-text/20">type here...</span>}
           <span className="w-3 h-8 bg-lavender-accent ml-1 animate-pulse"></span>
