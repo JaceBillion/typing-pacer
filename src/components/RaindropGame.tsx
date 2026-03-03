@@ -258,22 +258,14 @@ export default function RaindropGame({ onExit }: { onExit: () => void }) {
       </div>
 
       {/* Game Area */}
-      <div 
-        className="flex-1 relative overflow-hidden bg-indigo-bg cursor-text"
-        onClick={() => {
-          if (isPlaying && !gameState.isGameOver) {
-            inputElementRef.current?.focus();
-          }
-        }}
-      >
+      <div className="flex-1 relative overflow-hidden bg-indigo-bg">
         <input
           ref={inputElementRef}
           type="text"
           value={input}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          className="absolute opacity-0 w-1 h-1 z-0"
-          autoFocus
+          className={`absolute inset-0 w-full h-full opacity-0 cursor-text ${isPlaying && !gameState.isGameOver ? 'z-30' : '-z-10 pointer-events-none'}`}
           disabled={!isPlaying || gameState.isGameOver}
           autoComplete="off"
           autoCorrect="off"
@@ -364,14 +356,14 @@ export default function RaindropGame({ onExit }: { onExit: () => void }) {
 
       {/* Input Display */}
       <div 
-        className="h-20 border-t border-white/5 bg-indigo-bg/50 flex items-center justify-center z-10 cursor-text"
+        className="h-20 border-t border-white/5 bg-indigo-bg/50 flex items-center justify-center z-10 cursor-text relative"
         onClick={() => {
           if (isPlaying && !gameState.isGameOver) {
             inputElementRef.current?.focus();
           }
         }}
       >
-        <div className="text-3xl font-mono tracking-widest text-lavender-accent h-10 flex items-center">
+        <div className="text-3xl font-mono tracking-widest text-lavender-accent h-10 flex items-center pointer-events-none">
           {input || <span className="text-frosted-text/20">type here...</span>}
           <span className="w-3 h-8 bg-lavender-accent ml-1 animate-pulse"></span>
         </div>

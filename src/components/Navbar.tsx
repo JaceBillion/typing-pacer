@@ -14,8 +14,8 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="w-full bg-slate-ui/50 backdrop-blur-md border-b border-white/5 sticky top-0 z-50 overflow-x-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between min-w-max sm:min-w-0">
+    <nav className="w-full bg-slate-ui/50 backdrop-blur-md border-b border-white/5 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Left Spacer to perfectly balance the right side */}
         <div className="flex-1 hidden lg:block"></div>
 
