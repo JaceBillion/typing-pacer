@@ -2,7 +2,7 @@ import React from 'react';
 
 interface AdPlaceholderProps {
   className?: string;
-  format?: 'horizontal' | 'vertical' | 'rectangle';
+  format?: 'horizontal' | 'vertical' | 'rectangle' | 'skyscraper';
 }
 
 export default function AdPlaceholder({ className = '', format = 'horizontal' }: AdPlaceholderProps) {
@@ -11,6 +11,7 @@ export default function AdPlaceholder({ className = '', format = 'horizontal' }:
     horizontal: 'w-full max-w-4xl h-[90px]', // Standard leaderboard (728x90) or responsive
     vertical: 'w-[300px] h-[600px]', // Half page
     rectangle: 'w-[300px] h-[250px]', // Medium rectangle
+    skyscraper: 'w-[160px] h-[600px]', // Wide skyscraper
   };
 
   return (
