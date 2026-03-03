@@ -8,6 +8,7 @@ import Progress from './pages/Progress';
 import Lab from './pages/Lab';
 import About from './pages/About';
 import Games from './pages/Games';
+import Privacy from './pages/Privacy';
 import AdPlaceholder from './components/AdPlaceholder';
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="/lab" element={<Lab />} />
               <Route path="/games" element={<Games />} />
               <Route path="/about" element={<About />} />
+              <Route path="/privacy" element={<Privacy />} />
             </Routes>
           </main>
 

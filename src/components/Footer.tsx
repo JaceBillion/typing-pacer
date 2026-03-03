@@ -15,6 +15,9 @@ export default function Footer() {
           <Link to="/about" className="text-frosted-text/70 hover:text-lavender-accent transition-colors">
             About Us
           </Link>
+          <Link to="/privacy" className="text-frosted-text/70 hover:text-lavender-accent transition-colors">
+            Privacy Policy
+          </Link>
           <a 
             href="https://x.com/typingpacer" 
             target="_blank" 
